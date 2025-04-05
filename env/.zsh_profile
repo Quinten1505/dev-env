@@ -1,0 +1,86 @@
+export XDG_CONFIG_HOME=$HOME/.config
+VIM="nvim"
+alias vim=$VIM
+alias vi=$VIM
+
+PERSONAL=$XDG_CONFIG_HOME/personal
+DEV_ENV=$HOME/dev
+for i in `find -L $PERSONAL`; do
+    source $i
+done
+
+## All that sweet sweet fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export GIT_EDITOR=$VIM
+export DEV_ENV_HOME="$HOME/personal/dev"
+
+dev_env() {
+
+}
+
+# Where should I put you?
+bindkey -s ^f "tmux-sessionizer\n"
+
+catr() {
+    tail -n "+$1" $3 | head -n "$(($2 - $1 + 1))"
+}
+
+cat1Line() {
+    cat $1 | tr -d "\n"
+}
+
+
+addToPath() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$PATH:$1
+    fi
+}
+
+addToPathFront() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$1:$PATH
+    fi
+}
+
+addToPathFront $HOME/.local/.npm-global/bin
+addToPathFront $HOME/.local/apps
+addToPathFront $HOME/.local/scripts
+addToPathFront $HOME/.local/bin
+addToPathFront $HOME/.local/npm/bin
+addToPathFront $HOME/.local/n/bin/
+addToPathFront $HOME/.local/apps/
+
+addToPathFront $HOME/.deno/bin
+
+# Aliases
+alias ls='ls --color'
+alias c='clear'
+
+# thanks gt
+alias gt='NODE_OPTIONS="--no-deprecation" gt'
+
+# Keybindings
+bindkey -e
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+
+# History
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+# Completion styling
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
